@@ -791,7 +791,7 @@
   },
   {
     "url": "https://jcw87.github.io/c2-sans-fight/",
-    "name": "Undertale",
+    "name": "Bad Tine Simulator",
     "image": "./imgs/undertaile.jpeg"
   },
   {
@@ -858,5 +858,20 @@
     "url": "https://games.crazygames.com/en_US/space-waves/index.html?isNewUser=true&skipPrerollFirstSession=true&v=1.343",
     "name": "Space Waves",
     "image": "./imgs/Space_Waves.png"
+  },
+    {
+    "name": "Undertale Yellow",
+    "url": "https://cdn.suprnovaprojects.org/mathModules/undertail.html",
+    "image": "./imgs/undertaile.jpeg"
+  },
+    {
+    "name": "Clicker Heros",
+    "url": "https://www.coolmathgames.com/0-clicker-heroes/play#restart",
+    "image": "./imgs/clicker_heros.webp"
+  },
+    {
+    "name": "Ovo (Modded)",
+    "url": "https://arjun99ab.github.io/ovo/1.4.5/",
+    "image": "./imgs/ovo.jpeg"
   }
 ]

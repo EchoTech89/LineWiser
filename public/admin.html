@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LineWiser — Studio</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+        html, body {
+            height: auto; min-height: 100%; margin: 0; padding: 0;
+            background: radial-gradient(1200px 600px at 50% -20%, rgba(138, 180, 248, 0.15), transparent 55%), #111;
+            background-attachment: fixed; color: var(--text-primary); font-family: var(--font-main);
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        body { padding: 80px 20px; }
+
+        .container { width: 100%; max-width: 900px; display: grid; grid-template-columns: 1fr 300px; gap: 30px; }
+
+        .header-section { grid-column: span 2; text-align: center; margin-bottom: 40px; }
+        .header-section h1 { font-family: var(--font-display); font-weight: 400; font-size: 3rem; margin: 0; color: #fff; }
+
+        /* Form Styling */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px; padding: 30px; backdrop-filter: blur(15px);
+        }
+
+        .input-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 13px; font-weight: 600; color: var(--accent-color); text-transform: uppercase; letter-spacing: 1px; }
+
+        input {
+            background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255,255,255,0.1);
+            padding: 14px; border-radius: 14px; color: #fff; outline: none; font-family: inherit; transition: 0.2s;
+        }
+        input:focus { border-color: var(--accent-color); background: rgba(0,0,0,0.3); }
+
+        /* JSON Output Area */
+        .json-box {
+            background: #000; border-radius: 16px; padding: 20px;
+            font-family: 'Courier New', monospace; font-size: 13px; color: #10b981;
+            margin-top: 20px; position: relative; border: 1px solid rgba(255,255,255,0.05);
+            min-height: 120px; white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            position: absolute; top: 10px; right: 10px;
+            background: var(--accent-color); color: #111; border: none;
+            padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700;
+            cursor: pointer; transition: 0.2s;
+        }
+
+        /* Preview Area (Matching your Games page) */
+        .preview-label { text-align: center; margin-bottom: 15px; font-size: 12px; opacity: 0.6; }
+        .game-card-preview {
+            width: 160px; padding: 15px; border-radius: 24px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; flex-direction: column; align-items: center; margin: 0 auto;
+        }
+        .preview-icon {
+            width: 120px; height: 120px; border-radius: 22px; background: #2a2a2a;
+            margin-bottom: 14px; overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .preview-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .preview-name { font-size: 14px; font-weight: 500; text-align: center; color: #fff; }
+
+        .back-btn {
+            position: absolute; top: 30px; left: 30px; text-decoration: none;
+            color: var(--text-secondary); background: rgba(255,255,255,0.05);
+            padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border-color); font-size: 12px;
+        }
+
+        @media (max-width: 800px) {
+            .container { grid-template-columns: 1fr; }
+            .header-section { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>Studio</h1>
+        </div>
+
+        <!-- Editor Side -->
+        <div class="glass-card">
+            <div class="input-group">
+                <label>Display Name</label>
+                <input type="text" id="name-in" placeholder="e.g. Minecraft" oninput="update()">
+            </div>
+            <div class="input-group">
+                <label>Game URL</label>
+                <input type="text" id="url-in" placeholder="https://..." oninput="update()">
+            </div>
+            <div class="input-group">
+                <label>Image Path</label>
+                <input type="text" id="img-in" placeholder="./imgs/icon.png" oninput="update()">
+            </div>
+
+            <div class="json-box" id="json-out">
+                <button class="copy-btn" onclick="copyJson()">COPY</button>
+                <code id="code-block"></code>
+            </div>
+        </div>
+
+        <!-- Preview Side -->
+        <div style="padding-top: 20px;">
+            <div class="preview-label">LIVE PREVIEW</div>
+            <div class="game-card-preview">
+                <div class="preview-icon">
+                    <img id="prev-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                </div>
+                <div class="preview-name" id="prev-name">Game Name</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function update() {
+            const name = document.getElementById('name-in').value || "Game Name";
+            const url = document.getElementById('url-in').value || "https://...";
+            const img = document.getElementById('img-in').value || "";
+
+            // Update Preview
+            document.getElementById('prev-name').innerText = name;
+            if (img) {
+                document.getElementById('prev-img').src = img;
+            }
+
+            // Update JSON
+            const entry = {
+                "name": name,
+                "url": url,
+                "image": img
+            };
+
+            // Format with a leading comma for easy appending
+            const jsonString = `  {\n    "name": "${name}",\n    "url": "${url}",\n    "image": "${img}"\n  },`;
+            document.getElementById('code-block').innerText = jsonString;
+        }
+
+        function copyJson() {
+            const text = document.getElementById('code-block').innerText;
+            navigator.clipboard.writeText(text);
+            const btn = document.querySelector('.copy-btn');
+            btn.innerText = "COPIED!";
+            btn.style.background = "#10b981";
+            setTimeout(() => {
+                btn.innerText = "COPY";
+                btn.style.background = "";
+            }, 2000);
+        }
+
+        function goHome(e) {
+            e.preventDefault();
+            if (window.parent !== window.self) {
+                const homeBtn = window.parent.document.querySelector('[data-lw-action="home"]');
+                if (homeBtn) homeBtn.click();
+            } else { window.location.href = 'index.html'; }
+        }
+
+        // Init
+        update();
+    </script>
+</body>
+</html>
