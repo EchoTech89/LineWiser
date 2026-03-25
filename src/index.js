@@ -16,8 +16,31 @@ const publicPath = fileURLToPath(new URL("../public/", import.meta.url));
 logging.set_level(logging.NONE);
 Object.assign(wisp.options, {
 	allow_udp_streams: false,
-	hostname_blacklist: [],
-	dns_servers: ["1.1.1.3", "1.0.0.3"],
+	hostname_blacklist: [
+    /pornhub\.com/i,
+    /xvideos\.com/i,
+    /redtube\.com/i,
+    /youporn\.com/i,
+    /xhamster\.com/i,
+    /xnxx\.com/i,
+    /spankbang\.com/i,
+    /tube8\.com/i,
+    /tnaflix\.com/i,
+    /porndig\.com/i,
+    /efukt\.com/i,
+    /empflix\.com/i,
+    /javhub\.com/i,
+    /faproulette\.com/i,
+    /sex\.com/i,
+    /cam4\.com/i,
+    /chaturbate\.com/i,
+    /livejasmin\.com/i,
+    /onlyfans\.com/i,
+    /fansly\.com/i,
+    /manyvids\.com/i,
+    /clips4sale\.com/i
+  ],
+	dns_servers: ["1.1.1.1", "1.0.0.3"],
 });
 
 
